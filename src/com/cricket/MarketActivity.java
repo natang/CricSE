@@ -7,25 +7,26 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 public class MarketActivity extends Activity 
 {
 	Context ctx;
-	ArrayList<String> names=new ArrayList<String>();
+	Database da;
+	MarketAdapter adapter=new MarketAdapter();
+	ArrayList<DataClass> names=new ArrayList<DataClass>();
 	String[] name={"Sachin","Dravid","Ganguly","Dhoni","Rohit","Raina","Zaheer"};
-	
 	public void addNames(){
 		
 	}
@@ -36,19 +37,18 @@ public class MarketActivity extends Activity
 	
 	public class MarketAdapter extends BaseAdapter
 	{
-		//String[] name={"Sachin","Dravid","Ganguly","Dhoni","Rohit","Raina","Zaheer"};
-		Integer[] nos={100,100,100,100,100,100,100};
-		Double[] price={850.0,800.0,750.0,700.0,650.0,600.0,550.0};
+		//Integer[] nos={100,100,100,100,100,100,100};
+		//Double[] price={850.0,800.0,750.0,700.0,650.0,600.0,550.0};
 		public int getCount() 
 		{
 			// TODO Auto-generated method stub
-			return name.length;
+			return names.size();
 		}
 
 		public Object getItem(int pos) 
 		{
 			// TODO Auto-generated method stub
-			return name[pos];
+			return names.get(pos).getName();
 		}
 
 		public long getItemId(int arg0) 
@@ -68,9 +68,9 @@ public class MarketActivity extends Activity
 			TextView pname=(TextView)convertView.findViewById(R.id.textView1);
 			TextView pnos=(TextView)convertView.findViewById(R.id.textView2);
 			TextView pprice=(TextView)convertView.findViewById(R.id.textView3);
-			pname.setText(name[pos]);
-			pnos.setText(nos[pos]+"");
-			pprice.setText(price[pos]+"");
+			pname.setText(names.get(pos).getName());
+			pnos.setText(names.get(pos).getShares()+"");
+			pprice.setText(names.get(pos).getPrice()+"");
 			return convertView;
 		}
 	}
@@ -81,8 +81,14 @@ public class MarketActivity extends Activity
 		ctx=this;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.market);
+		da=new Database(ctx);
+		da.open();
+		da.insertData("Sachin Tendulkar", 100, 100);
+		da.insertData("Virendra Shewag", 90, 100);
+		da.insertData("Zahir Khan", 80, 100);
+		names=da.getData(null);
 		ListView lv=(ListView)findViewById(R.id.listView1);
-		lv.setAdapter(new MarketAdapter());
+		lv.setAdapter(adapter);
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int pos,
@@ -117,21 +123,35 @@ public class MarketActivity extends Activity
 			}
 			
 		});
-		//String[] name={"Sachin","Dravid","Ganguly","Dhoni","Rohit","Raina","Zaheer"};
-		AutoCompleteTextView act=(AutoCompleteTextView)findViewById(R.id.autoCompleteTextView1);
-		ArrayAdapter aa=new ArrayAdapter(ctx, android.R.layout.simple_spinner_dropdown_item, name);
-		act.setAdapter(aa);
-		act.setThreshold(1);
-		act.setOnItemClickListener(new OnItemClickListener() {
-
-			public void onItemClick(AdapterView<?> arg0, View convertView, int pos,
-					long arg3) 
-			{
+		EditText search=(EditText)findViewById(R.id.editText1);
+		search.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				// TODO Auto-generated method stub
-				String p=arg0.getItemAtPosition(pos)+"";
-				
+				Log.i("on", s+"");
 			}
 			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				Log.i("before", s+"");
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				Log.i("after", s+"");
+				names=da.getData(s+"");
+				adapter.notifyDataSetChanged();
+			}
 		});
+	}
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		da.close();
+		super.onDestroy();
 	}
 }
