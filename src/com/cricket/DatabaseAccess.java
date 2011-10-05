@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class Database {
+public class DatabaseAccess {
 	public static final String DATABASE = "cricsedb";
 	public static final int DATABASE_VERSION = 1;
 	public static final String TABLE_MARKET = "market";
@@ -22,7 +22,7 @@ public class Database {
 	Databasehelper dh;
 	SQLiteDatabase db;
 	
-	public Database(Context ctx){
+	public DatabaseAccess(Context ctx){
 		dh = new Databasehelper(ctx);
 	}
 	

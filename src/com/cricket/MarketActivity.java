@@ -23,7 +23,7 @@ import android.widget.AdapterView.OnItemClickListener;
 public class MarketActivity extends Activity 
 {
 	Context ctx;
-	Database da;
+	DatabaseAccess da;
 	MarketAdapter adapter=new MarketAdapter();
 	ArrayList<DataClass> names=new ArrayList<DataClass>();
 	String[] name={"Sachin","Dravid","Ganguly","Dhoni","Rohit","Raina","Zaheer"};
@@ -81,7 +81,7 @@ public class MarketActivity extends Activity
 		ctx=this;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.market);
-		da=new Database(ctx);
+		da=new DatabaseAccess(ctx);
 		da.open();
 		da.insertData("Sachin Tendulkar", 100, 100);
 		da.insertData("Virendra Shewag", 90, 100);
