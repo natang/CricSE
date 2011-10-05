@@ -1,7 +1,5 @@
 package com.cricket;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -22,23 +20,14 @@ import android.widget.AdapterView.OnItemSelectedListener;
 
 public class MarketActivity extends Activity 
 {
+	boolean flag=false;
+	ListView lv;
 	Context ctx;
-	ArrayList<String> names=new ArrayList<String>();
 	String[] name={"Sachin","Dravid","Ganguly","Dhoni","Rohit","Raina","Zaheer"};
-	
-	public void addNames(){
-		
-	}
-	
-	public void removeNames(){
-		
-	}
-	
+	Integer[] nos={100,100,100,100,100,100,100};
+	Double[] price={850.0,800.0,750.0,700.0,650.0,600.0,550.0};
 	public class MarketAdapter extends BaseAdapter
 	{
-		//String[] name={"Sachin","Dravid","Ganguly","Dhoni","Rohit","Raina","Zaheer"};
-		Integer[] nos={100,100,100,100,100,100,100};
-		Double[] price={850.0,800.0,750.0,700.0,650.0,600.0,550.0};
 		public int getCount() 
 		{
 			// TODO Auto-generated method stub
@@ -73,6 +62,16 @@ public class MarketActivity extends Activity
 			pprice.setText(price[pos]+"");
 			return convertView;
 		}
+		
+		public Integer getNos(int pos)
+		{
+			return nos[pos];
+		}
+		
+		public Double getPrice(int pos)
+		{
+			return price[pos];
+		}
 	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -81,7 +80,7 @@ public class MarketActivity extends Activity
 		ctx=this;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.market);
-		ListView lv=(ListView)findViewById(R.id.listView1);
+		lv=(ListView)findViewById(R.id.listView1);
 		lv.setAdapter(new MarketAdapter());
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
@@ -115,23 +114,58 @@ public class MarketActivity extends Activity
 				})
 				.show();
 			}
-			
 		});
-		//String[] name={"Sachin","Dravid","Ganguly","Dhoni","Rohit","Raina","Zaheer"};
 		AutoCompleteTextView act=(AutoCompleteTextView)findViewById(R.id.autoCompleteTextView1);
 		ArrayAdapter aa=new ArrayAdapter(ctx, android.R.layout.simple_spinner_dropdown_item, name);
 		act.setAdapter(aa);
 		act.setThreshold(1);
 		act.setOnItemClickListener(new OnItemClickListener() {
+			class MarketItemAdapter extends BaseAdapter
+			{
+				public int getCount() 
+				{
+					// TODO Auto-generated method stub
+					return 1;
+				}
 
+				public Object getItem(int position) 
+				{
+					// TODO Auto-generated method stub
+					return null;
+				}
+
+				public long getItemId(int position) 
+				{
+					// TODO Auto-generated method stub
+					return 0;
+				}
+
+				public View getView(int pos, View convertView,
+						ViewGroup parent) 
+				{
+					// TODO Auto-generated method stub
+					if(convertView==null)
+					{
+						LayoutInflater li=getLayoutInflater();
+						convertView=li.inflate(R.layout.marketitem, null);
+					}
+					MarketAdapter ma=new MarketAdapter();
+					TextView pname=(TextView)convertView.findViewById(R.id.textView1);
+					TextView pnos=(TextView)convertView.findViewById(R.id.textView2);
+					TextView pprice=(TextView)convertView.findViewById(R.id.textView3);
+					pname.setText(ma.getItem(pos)+"");
+					pnos.setText(ma.getNos(pos)+"");
+					pprice.setText(ma.getPrice(pos)+"");
+					return convertView;
+				}
+				
+			}
 			public void onItemClick(AdapterView<?> arg0, View convertView, int pos,
 					long arg3) 
 			{
 				// TODO Auto-generated method stub
-				String p=arg0.getItemAtPosition(pos)+"";
-				
-			}
-			
+				lv.setAdapter(new MarketItemAdapter());
+			}	
 		});
 	}
 }

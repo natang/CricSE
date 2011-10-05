@@ -18,5 +18,11 @@
 		<activity android:name=".PortfolioActivity"></activity>
 		<activity android:name=".RequestActivity"></activity>
 		<activity android:name=".BiddingActivity"></activity>
+		<activity android:name=".RequestsByMe"></activity>
+		<activity android:name=".RequestsForMe"></activity>
+		<activity android:name=".Bidding1"></activity>
+		<activity android:name=".Bidding2"></activity>
+		<activity android:name=".Bidding3"></activity>
+		<activity android:name=".Bidding4"></activity>
     </application>
 </manifest>
